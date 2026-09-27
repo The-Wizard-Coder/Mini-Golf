@@ -1,0 +1,82 @@
+[gd_scene format=3 uid="uid://by82dn1lh5rl4"]
+
+[ext_resource type="PackedScene" uid="uid://dor5vvvk1cq00" path="res://scenes/level.tscn" id="1_level"]
+[ext_resource type="PackedScene" path="res://scenes/ball.tscn" id="2_ballscene"]
+[ext_resource type="Script" uid="uid://dr0si21i2qbti" path="res://scripts/follow_camera.gd" id="3_followcam"]
+[ext_resource type="Shader" uid="uid://cgu6ax4c6al0h" path="res://shaders/cartoon.gdshader" id="4_cartoon"]
+[ext_resource type="Shader" uid="uid://db68ikuwg8cki" path="res://shaders/water.gdshader" id="5_water"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_sky1"]
+
+[sub_resource type="Sky" id="Sky_sky1"]
+sky_material = SubResource("ProceduralSkyMaterial_sky1")
+
+[sub_resource type="Environment" id="Environment_env1"]
+background_mode = 2
+sky = SubResource("Sky_sky1")
+ambient_light_source = 3
+tonemap_mode = 2
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_water"]
+render_priority = 0
+shader = ExtResource("5_water")
+shader_parameter/shallow_color = Color(0.1, 0.45, 0.55, 1)
+shader_parameter/deep_color = Color(0.01, 0.1, 0.22, 1)
+shader_parameter/sky_color = Color(0.55, 0.72, 0.9, 1)
+shader_parameter/wave_height = 0.08
+shader_parameter/wave_speed = 0.5
+shader_parameter/ripple_strength = 1.2
+shader_parameter/reflection_amount = 0.75
+shader_parameter/alpha = 0.8
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_water"]
+size = Vector2(120, 120)
+subdivide_width = 100
+subdivide_depth = 100
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_cartoon"]
+shader = ExtResource("4_cartoon")
+shader_parameter/outline_strength = 1.0
+shader_parameter/edge_threshold = 0.22
+shader_parameter/edge_width = 2.0
+shader_parameter/outline_color = Color(0.02, 0.02, 0.05, 1)
+
+[node name="Prototype" type="Node3D" unique_id=1671998443]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1781053224]
+environment = SubResource("Environment_env1")
+
+[node name="Sun" type="DirectionalLight3D" parent="." unique_id=399714204]
+transform = Transform3D(-0.32079166, 0.104137145, 0.9414075, 0.8276625, 0.5140772, 0.22516593, -0.46050796, 0.8513992, -0.2511021, 0, 4.1886826, 0)
+light_energy = 1.2
+shadow_enabled = true
+
+[node name="Level" parent="." unique_id=1334339462 instance=ExtResource("1_level")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.440063, 0, 0)
+
+[node name="Water" type="MeshInstance3D" parent="." unique_id=1558528477]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, -3, 2.5)
+material_override = SubResource("ShaderMaterial_water")
+mesh = SubResource("PlaneMesh_water")
+
+[node name="Ball" parent="." unique_id=1721743321 instance=ExtResource("2_ballscene")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0.12, 1.4581093)
+linear_damp = 0.5
+angular_damp = 0.5
+
+[node name="Camera3D" type="Camera3D" parent="." unique_id=839886774]
+transform = Transform3D(1, 0, 0, 0, 0.759257, -0.650791, 0, 0.650791, 0.759257, 0, 12, 14)
+current = true
+script = ExtResource("3_followcam")
+target_path = NodePath("../Ball")
+
+[node name="PostFX" type="CanvasLayer" parent="." unique_id=917791447]
+
+[node name="ColorRect" type="ColorRect" parent="PostFX" unique_id=1730179328]
+material = SubResource("ShaderMaterial_cartoon")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2

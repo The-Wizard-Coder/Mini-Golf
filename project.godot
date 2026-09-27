@@ -1,0 +1,47 @@
+; Engine configuration file.
+; It's best edited using the editor UI and not directly,
+; since the parameters that go here are not all obvious.
+;
+; Format:
+;   [section] ; section goes between []
+;   param=value ; assign values to parameters
+
+config_version=5
+
+[application]
+
+config/name="Mini Golf"
+run/main_scene="res://scenes/main_menu.tscn"
+config/features=PackedStringArray("4.7", "Forward Plus")
+config/icon="res://icon.svg"
+
+[autoload]
+
+Music="*res://scripts/music.gd"
+MCPRuntimeServer="*res://addons/godot_mcp_toolkit/runtime/mcp_runtime_server.gd"
+
+[display]
+
+window/size/viewport_width=1920
+window/size/viewport_height=1080
+window/stretch/mode="canvas_items"
+window/stretch/aspect="expand"
+
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/godot_mcp_toolkit/plugin.cfg")
+
+[gui]
+
+theme/custom="res://assets/UX/theme.tres"
+
+[physics]
+
+3d/physics_engine="Jolt Physics"
+jolt_physics_3d/simulation/penetration_slop=0.001
+jolt_physics_3d/simulation/speculative_contact_distance=0.002
+
+[rendering]
+
+rendering_device/driver.windows="d3d12"
+renderer/rendering_method.web="gl_compatibility"

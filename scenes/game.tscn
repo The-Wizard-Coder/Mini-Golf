@@ -1,0 +1,203 @@
+[gd_scene format=3 uid="uid://qqg3fij4qvob"]
+
+[ext_resource type="Shader" uid="uid://bveinf2odf75w" path="res://shaders/toon_water.gdshader" id="1_water"]
+[ext_resource type="Shader" uid="uid://cgu6ax4c6al0h" path="res://shaders/cartoon.gdshader" id="2_cartoon"]
+[ext_resource type="PackedScene" path="res://scenes/ball.tscn" id="3_ball"]
+[ext_resource type="Script" uid="uid://dr0si21i2qbti" path="res://scripts/follow_camera.gd" id="4_followcam"]
+[ext_resource type="Script" uid="uid://ckioffedrveq5" path="res://scripts/level_manager.gd" id="5_mgr"]
+[ext_resource type="Script" uid="uid://bhhqn7r7hae6p" path="res://scripts/level_over_ui.gd" id="6_ui"]
+[ext_resource type="PackedScene" path="res://scenes/levels/level_0.tscn" id="7_lvl0"]
+[ext_resource type="PackedScene" path="res://scenes/levels/level_1.tscn" id="8_lvl1"]
+[ext_resource type="PackedScene" uid="uid://bgr34wnqn5fqc" path="res://scenes/levels/level_2.tscn" id="9_lvl2"]
+[ext_resource type="PackedScene" path="res://scenes/levels/level_3.tscn" id="10_lvl3"]
+[ext_resource type="PackedScene" path="res://scenes/levels/rng_level.tscn" id="11_rng"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_sky1"]
+
+[sub_resource type="Sky" id="Sky_sky1"]
+sky_material = SubResource("ProceduralSkyMaterial_sky1")
+
+[sub_resource type="Environment" id="Environment_env1"]
+background_mode = 2
+sky = SubResource("Sky_sky1")
+ambient_light_source = 3
+ambient_light_energy = 0.55
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_water"]
+render_priority = 0
+shader = ExtResource("1_water")
+shader_parameter/shallow_color = Color(0.38, 0.82, 0.92, 1)
+shader_parameter/deep_color = Color(0.06, 0.32, 0.58, 1)
+shader_parameter/foam_color = Color(1, 1, 1, 1)
+shader_parameter/bands = 4.0
+shader_parameter/band_scale = 0.8
+shader_parameter/wave_speed = 0.4
+shader_parameter/wave_freq = 1.4
+shader_parameter/wave_amp = 0.06
+shader_parameter/foam_threshold = 0.72
+shader_parameter/foam_soft = 0.12
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_water"]
+size = Vector2(120, 120)
+subdivide_width = 100
+subdivide_depth = 100
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_seafloor"]
+albedo_color = Color(0.06, 0.15, 0.22, 1)
+metallic_specular = 0.0
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_seafloor"]
+size = Vector2(120, 120)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_cartoon"]
+shader = ExtResource("2_cartoon")
+shader_parameter/outline_strength = 1.0
+shader_parameter/edge_threshold = 0.32
+shader_parameter/edge_width = 1.5
+shader_parameter/outline_color = Color(0.02, 0.02, 0.05, 1)
+
+[node name="Game" type="Node3D" unique_id=1910236772]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=763005224]
+environment = SubResource("Environment_env1")
+
+[node name="Sun" type="DirectionalLight3D" parent="." unique_id=606807194]
+transform = Transform3D(-0.32079166, 0.104137145, 0.9414075, 0.8276625, 0.5140772, 0.22516593, -0.46050796, 0.8513992, -0.2511021, 0, 4.1886826, 0)
+light_energy = 1.2
+shadow_enabled = true
+shadow_bias = 0.08
+shadow_reverse_cull_face = true
+shadow_opacity = 0.7
+shadow_blur = 2.0
+directional_shadow_mode = 0
+directional_shadow_max_distance = 40.0
+
+[node name="Water" type="MeshInstance3D" parent="." unique_id=578740298]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, -3, 2.5)
+material_override = SubResource("ShaderMaterial_water")
+mesh = SubResource("PlaneMesh_water")
+
+[node name="SeaFloor" type="MeshInstance3D" parent="." unique_id=2094754410]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, -6, 2.5)
+material_override = SubResource("StandardMaterial3D_seafloor")
+mesh = SubResource("PlaneMesh_seafloor")
+
+[node name="LevelContainer" type="Node3D" parent="." unique_id=481950064]
+
+[node name="Ball" parent="." unique_id=1518117631 instance=ExtResource("3_ball")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0.4, 1.5)
+
+[node name="Camera3D" type="Camera3D" parent="." unique_id=860155128]
+transform = Transform3D(1, 0, 0, 0, 0.759257, -0.650791, 0, 0.650791, 0.759257, 0, 12, 14)
+current = true
+script = ExtResource("4_followcam")
+target_path = NodePath("../Ball")
+
+[node name="LevelManager" type="Node" parent="." unique_id=972326296]
+script = ExtResource("5_mgr")
+levels = Array[PackedScene]([ExtResource("7_lvl0"), ExtResource("8_lvl1"), ExtResource("9_lvl2"), ExtResource("10_lvl3")])
+endless_level = ExtResource("11_rng")
+ball_path = NodePath("../Ball")
+level_container_path = NodePath("../LevelContainer")
+ui_path = NodePath("../LevelOverUI")
+camera_path = NodePath("../Camera3D")
+
+[node name="PostFX" type="CanvasLayer" parent="." unique_id=361081945]
+
+[node name="BackBuffer" type="BackBufferCopy" parent="PostFX"]
+copy_mode = 2
+
+[node name="ColorRect" type="ColorRect" parent="PostFX" unique_id=57286782]
+material = SubResource("ShaderMaterial_cartoon")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="LevelOverUI" type="CanvasLayer" parent="." unique_id=1273044806]
+script = ExtResource("6_ui")
+
+[node name="Root" type="Control" parent="LevelOverUI" unique_id=1014036991]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Dim" type="ColorRect" parent="LevelOverUI/Root" unique_id=251115947]
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.05, 0.05, 0.08, 0.55)
+
+[node name="Center" type="CenterContainer" parent="LevelOverUI/Root"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Panel" type="PanelContainer" parent="LevelOverUI/Root/Center" unique_id=192060810]
+layout_mode = 2
+theme_type_variation = &"WoodPanel"
+
+[node name="VBox" type="VBoxContainer" parent="LevelOverUI/Root/Center/Panel" unique_id=478932046]
+layout_mode = 2
+theme_override_constants/separation = 20
+alignment = 1
+
+[node name="Title" type="Label" parent="LevelOverUI/Root/Center/Panel/VBox" unique_id=463790626]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 4
+theme_type_variation = &"Title"
+theme_override_font_sizes/font_size = 46
+text = "Level Complete!"
+horizontal_alignment = 1
+
+[node name="NextButton" type="Button" parent="LevelOverUI/Root/Center/Panel/VBox" unique_id=1660434251]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(400, 96)
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Next Level"
+
+[node name="MenuButton" type="Button" parent="LevelOverUI/Root/Center/Panel/VBox" unique_id=224261576]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(400, 96)
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Main Menu"
+
+[node name="LoadingOverlay" type="CanvasLayer" parent="."]
+unique_name_in_owner = true
+layer = 10
+
+[node name="Bg" type="ColorRect" parent="LoadingOverlay"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.06, 0.12, 0.13, 1)
+
+[node name="Label" type="Label" parent="LoadingOverlay"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_type_variation = &"Title"
+theme_override_font_sizes/font_size = 44
+text = "Loading..."
+horizontal_alignment = 1
+vertical_alignment = 1

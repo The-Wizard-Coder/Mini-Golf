@@ -1,0 +1,27 @@
+[gd_scene format=3 uid="uid://cmyhmf6cwb8i0"]
+
+[ext_resource type="Script" uid="uid://dmjv3igfbpif4" path="res://scripts/level.gd" id="1_6iamk"]
+[ext_resource type="MeshLibrary" uid="uid://dooce8fcemvbe" path="res://assets/golf-kit/mesh_library.tres" id="2_nsrm0"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_x42e6"]
+size = Vector3(0.4, 0.5, 0.4)
+
+[node name="Level" type="Node3D" unique_id=2134769245]
+script = ExtResource("1_6iamk")
+
+[node name="GridMap" type="GridMap" parent="." unique_id=75653060]
+mesh_library = ExtResource("2_nsrm0")
+cell_size = Vector3(1, 1, 1)
+cell_center_y = false
+data = {
+"cells": PackedInt32Array(0, 1, 1441820, 1, 1, 1441897, 2, 1, 1441897, 3, 1, 1048589, 3, 2, 105, 3, 3, 105, 3, 4, 15)
+}
+
+[node name="Start" type="Marker3D" parent="." unique_id=662983201]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.5, 0.3, 3.5)
+
+[node name="HoleArea" type="Area3D" parent="." unique_id=356583533]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, 0.15, 1.5)
+
+[node name="@CollisionShape3D@3" type="CollisionShape3D" parent="HoleArea" unique_id=1244693866]
+shape = SubResource("BoxShape3D_x42e6")

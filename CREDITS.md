@@ -1,0 +1,7 @@
+- https://kenney.nl/assets/minigolf-kit
+- https://www.summerengine.com/asset-store/pack/prototype-textures
+- https://github.com/NPGameDev/godot-mcp-toolkit
+- Cozy UI Pack (DEMO) by dobo_ui — https://dobo-ui.itch.io/
+- Luckiest Guy font — Astigmatic, Apache License 2.0 — https://fonts.google.com/specimen/Luckiest+Guy
+- Varela Round font — Joe Prince, SIL Open Font License 1.1 — https://fonts.google.com/specimen/Varela+Round
+- "Carefree" Kevin MacLeod (incompetech.com) Licensed under Creative Commons: By Attribution 4.0 License https://creativecommons.org/licenses/by/4.0/

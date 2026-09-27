@@ -1,0 +1,76 @@
+[gd_scene format=3 uid="uid://6qi0m4dr7q5h"]
+
+[ext_resource type="Script" uid="uid://cdsys7xfem5ej" path="res://scripts/ball.gd" id="1_ballscript"]
+[ext_resource type="PackedScene" uid="uid://67ujp4ri1rm6" path="res://assets/golf-kit/ball-blue.glb" id="2_ballmesh"]
+[ext_resource type="AudioStream" uid="uid://8ewir82u83f3" path="res://assets/audio/impact.wav" id="5_impact"]
+[ext_resource type="AudioStream" uid="uid://dsgo6p72pxs2y" path="res://assets/audio/splash.wav" id="6_splash"]
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_ball"]
+friction = 0.15
+bounce = 0.62
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_ball"]
+radius = 0.035
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_arrow"]
+size = Vector2(1, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_foam"]
+transparency = 1
+shading_mode = 0
+vertex_color_use_as_albedo = true
+albedo_color = Color(1, 1, 1, 0.9)
+
+[sub_resource type="SphereMesh" id="SphereMesh_foam"]
+material = SubResource("StandardMaterial3D_foam")
+radius = 0.05
+height = 0.1
+radial_segments = 8
+rings = 6
+
+[sub_resource type="Gradient" id="Gradient_foam"]
+offsets = PackedFloat32Array(0, 0.15, 0.75, 1)
+colors = PackedColorArray(1, 1, 1, 0, 1, 1, 1, 0.95, 1, 1, 1, 0.7, 1, 1, 1, 0)
+
+[node name="Ball" type="RigidBody3D" unique_id=1670815439]
+physics_material_override = SubResource("PhysicsMaterial_ball")
+continuous_cd = true
+linear_damp = 0.35
+angular_damp = 0.4
+script = ExtResource("1_ballscript")
+
+[node name="BallMesh" parent="." unique_id=911721568 instance=ExtResource("2_ballmesh")]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=521967295]
+shape = SubResource("SphereShape3D_ball")
+
+[node name="AimLine" type="MeshInstance3D" parent="." unique_id=1675343516]
+top_level = true
+visible = false
+mesh = SubResource("PlaneMesh_arrow")
+
+[node name="ImpactSound" type="AudioStreamPlayer3D" parent="." unique_id=1828491183]
+stream = ExtResource("5_impact")
+unit_size = 24.0
+max_distance = 60.0
+
+[node name="SplashSound" type="AudioStreamPlayer3D" parent="." unique_id=911311503]
+stream = ExtResource("6_splash")
+unit_size = 24.0
+max_distance = 60.0
+
+[node name="SplashFoam" type="CPUParticles3D" parent="." unique_id=902011329]
+top_level = true
+emitting = false
+amount = 30
+lifetime = 0.9
+one_shot = true
+explosiveness = 1.0
+mesh = SubResource("SphereMesh_foam")
+direction = Vector3(0, 1, 0)
+spread = 78.0
+gravity = Vector3(0, -5, 0)
+initial_velocity_min = 1.0
+initial_velocity_max = 2.8
+scale_amount_max = 2.6
+color_ramp = SubResource("Gradient_foam")

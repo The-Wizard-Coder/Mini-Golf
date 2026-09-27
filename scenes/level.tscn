@@ -1,0 +1,13 @@
+[gd_scene format=3 uid="uid://dor5vvvk1cq00"]
+
+[ext_resource type="MeshLibrary" uid="uid://dlkf0fs1yp14e" path="res://assets/golf-kit/mesh_library.tres" id="1_2q6dc"]
+
+[node name="Level" type="Node3D" unique_id=643754709]
+
+[node name="GridMap" type="GridMap" parent="." unique_id=527432993]
+mesh_library = ExtResource("1_2q6dc")
+cell_size = Vector3(1, 1, 1)
+cell_center_y = false
+data = {
+"cells": PackedInt32Array(0, 1, 1441820, 1, 1, 1441897, 2, 1, 1441897, 3, 1, 1441897, 4, 1, 1441897, 5, 1, 1048591)
+}
